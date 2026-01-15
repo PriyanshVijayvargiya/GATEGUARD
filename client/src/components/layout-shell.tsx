@@ -58,7 +58,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="font-display font-bold text-xl">GateGuard</h1>
+          <h1 className="font-display font-bold text-xl">GateGuard</h1>
             <p className="text-xs text-muted-foreground font-medium">Secure Entry System</p>
           </div>
         </div>
