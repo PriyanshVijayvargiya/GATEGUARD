@@ -1,0 +1,287 @@
+Build a full-stack web + mobile-ready application called “My Gate” for an automated society/campus gate system using Automatic Number Plate Recognition (ANPR/LPR).
+
+✅ Tech Stack (Must Use)
+
+Frontend (Resident App UI): React + Tailwind CSS
+
+Admin Panel UI: React + Tailwind CSS
+
+Backend API: Node.js + Express
+
+Database: MongoDB (Mongoose)
+
+Authentication: JWT + bcrypt
+
+Realtime Updates (optional but good): Socket.io
+
+Deployment Ready: Works inside Replit
+
+✅ Features to Build
+1) Resident Side (Frontend)
+
+Create a clean UI named My Gate with these pages:
+
+Pages:
+
+✅ Login / Register
+
+Register using:
+
+Name
+
+Phone number
+
+Flat/Unit number
+
+Password
+
+Login using phone + password
+
+✅ Dashboard
+
+Shows:
+
+Registered vehicles list
+
+Entry/Exit logs recent 10 records
+
+Button: “Add Vehicle”
+
+Button: “Create Temporary Pass”
+
+✅ My Vehicles
+
+Add vehicle form:
+
+Vehicle name (optional)
+
+Plate number (required)
+
+Status should show:
+
+Pending approval
+
+Approved
+
+Blocked
+
+✅ Temporary Pass
+
+Create pass for visitor:
+
+Visitor name
+
+Plate number
+
+Valid from date/time
+
+Valid till date/time
+
+Display all active passes
+
+✅ Activity Logs
+
+Show logs with:
+
+Plate number
+
+Entry/Exit
+
+Timestamp
+
+Gate lane (optional)
+
+Confidence score (optional)
+
+✅ Profile Page
+
+Basic user info + logout
+
+2) Admin Panel (Frontend)
+
+Create a separate Admin UI with:
+
+✅ Admin Login
+✅ Admin Dashboard
+
+Pending vehicle approval list
+
+Approve / Reject vehicle
+
+Blacklist vehicle instantly
+
+Search vehicle by plate number
+✅ Users Management
+
+View residents list
+✅ Gate Logs
+
+Full searchable logs filter by date/plate/user
+
+3) Backend (Node + Express API)
+
+Build REST API with proper folder structure:
+
+API Requirements
+
+✅ Authentication Routes:
+
+POST /api/auth/register
+
+POST /api/auth/login
+
+✅ Vehicle Routes:
+
+POST /api/vehicles/add
+
+GET /api/vehicles/my
+
+GET /api/vehicles/all (admin)
+
+PATCH /api/vehicles/:id/approve (admin)
+
+PATCH /api/vehicles/:id/reject (admin)
+
+PATCH /api/vehicles/:id/block (admin)
+
+✅ Temporary Pass Routes:
+
+POST /api/passes/create
+
+GET /api/passes/my
+
+GET /api/passes/all (admin)
+
+✅ Gate Logs Routes:
+
+POST /api/logs/create (used by ANPR gate system)
+
+GET /api/logs/my
+
+GET /api/logs/all (admin)
+
+✅ ANPR Gate Verification Route:
+
+POST /api/gate/verify
+Input: { plateNumber: "MP09AB1234" }
+Output:
+
+if approved / active pass found → { allowed: true, reason: "approved_vehicle" }
+
+else → { allowed: false, reason: "not_found" }
+
+4) Database Models (MongoDB)
+
+Create these schemas:
+
+User Schema
+
+name
+
+phone (unique)
+
+flatNumber
+
+passwordHash
+
+role: "resident" | "admin"
+
+Vehicle Schema
+
+userId
+
+plateNumber (uppercase normalized)
+
+status: pending / approved / rejected / blocked
+
+createdAt
+
+TemporaryPass Schema
+
+createdBy (userId)
+
+visitorName
+
+plateNumber
+
+validFrom
+
+validTill
+
+status: active / expired
+
+GateLog Schema
+
+plateNumber
+
+type: entry / exit
+
+timestamp
+
+source: camera_id or lane
+
+confidence (optional)
+
+matchedUserId (optional)
+
+reason: approved_vehicle / temp_pass / denied
+
+5) Security + Validation
+
+✅ Requirements:
+
+Normalize plate numbers (uppercase + remove spaces)
+
+Use JWT middleware for protected routes
+
+Admin routes accessible only if role is “admin”
+
+Use error handling + clean responses
+
+6) Bonus Features (If Possible)
+
+✅ Add:
+
+Socket.io for realtime gate events on admin dashboard
+
+Seeder script to create default admin account:
+
+phone: 9999999999
+
+password: admin123
+
+✅ UI Requirements
+
+Modern clean design
+
+Mobile responsive (app-like)
+
+Use Tailwind components and cards
+
+Show success/error toasts
+
+✅ Project Structure (Must Follow)
+/backend
+  /models
+  /routes
+  /middleware
+  server.js
+/frontend
+  /src/pages
+  /src/components
+  App.jsx
+/admin
+  /src/pages
+  /src/components
+  App.jsx
+README.md
+
+✅ Final Output
+
+✅ The project must run with:
+
+npm install
+
+npm run dev (or separate start commands)
+
+✅ Provide instructions inside README for running frontend + backend in Replit.

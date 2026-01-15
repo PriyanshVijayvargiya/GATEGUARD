@@ -1,0 +1,231 @@
+Build a Python-based “Gate Edge Device” program for an automated gate system using Automatic Number Plate Recognition (ANPR/LPR).
+This program runs on a Raspberry Pi / Mini PC and will:
+
+✅ Read license plate from camera image/video
+✅ Verify plate access from backend API
+✅ Open gate using GPIO relay (Raspberry Pi)
+✅ Save logs locally
+✅ Work even if internet is down (offline whitelist cache)
+
+✅ TECH STACK REQUIREMENTS
+
+Language: Python 3
+
+Camera Input: OpenCV
+
+ANPR API: PlateRecognizer OR OpenALPR (make it easy to switch)
+
+Backend Communication: requests (REST API)
+
+Local Cache Storage: SQLite or JSON file
+
+Raspberry Pi Relay Control: RPi.GPIO (with mock mode if not running on Pi)
+
+✅ INPUT SOURCES
+
+Support two camera modes:
+
+Mode 1: USB Webcam
+
+Use OpenCV VideoCapture(0)
+
+Mode 2: IP Camera (RTSP)
+
+Use OpenCV VideoCapture("rtsp://...")
+
+✅ ANPR RECOGNITION
+
+Implement a function:
+
+recognize_plate(frame) -> {plate, confidence}
+
+Extract the best plate text from frame
+
+Normalize plate:
+
+uppercase
+
+remove spaces and dashes
+
+✅ Provide 2 options:
+
+PlateRecognizer API
+
+Use their endpoint
+
+API key stored in .env
+
+Offline mode placeholder
+
+If no API key, simulate with dummy text
+
+✅ BACKEND INTEGRATION
+
+Backend will have this endpoint:
+
+POST /api/gate/verify
+
+Request:
+
+{ "plateNumber": "MP09AB1234" }
+
+
+Response:
+
+{ "allowed": true, "reason": "approved_vehicle" }
+
+
+OR:
+
+{ "allowed": false, "reason": "not_found" }
+
+
+✅ If allowed → open gate
+✅ If denied → do nothing + print message
+
+✅ GATE RELAY CONTROL
+
+Implement these functions:
+
+open_gate()
+
+Trigger relay HIGH for 1 second
+
+Then LOW
+
+Provide mock fallback if running on non-Raspberry Pi device
+
+Config options:
+
+GPIO pin number
+
+Pulse duration
+
+✅ LOCAL OFFLINE CACHE (Important)
+
+System must support offline mode.
+
+Maintain:
+✅ whitelist_cache.json
+
+When internet is available:
+
+Fetch approved plates from backend endpoint:
+
+GET /api/vehicles/whitelist
+
+Save it locally to whitelist_cache.json
+
+When internet fails:
+
+Check locally cached whitelist before denying entry
+
+✅ LOGGING SYSTEM
+
+Save logs locally in:
+✅ gate_logs.sqlite OR logs.json
+
+Each log must include:
+
+plateNumber
+
+timestamp
+
+allowed (true/false)
+
+reason
+
+confidence
+
+mode: online/offline
+
+image snapshot path (optional)
+
+Also send logs to backend:
+
+POST /api/logs/create
+✅ PERFORMANCE RULES
+
+Only attempt recognition when motion is detected OR every 2 seconds
+
+Avoid repeated gate opening for same car:
+
+Add cooldown of 10 seconds per plate
+
+✅ UI / OUTPUT
+
+Program should show:
+
+Live video window (optional)
+
+Print readable console logs like:
+
+[INFO] Plate detected: MP09AB1234 (92%)
+[ACCESS] Allowed ✅ reason=approved_vehicle → Opening Gate
+
+
+If denied:
+
+[ACCESS] Denied ❌ reason=not_found
+
+✅ CONFIG FILE
+
+Create a .env file support:
+
+BACKEND_URL=http://localhost:5000
+CAMERA_MODE=usb
+RTSP_URL=
+PLATE_RECOGNIZER_API_KEY=
+GPIO_PIN=18
+GATE_PULSE_SECONDS=1
+COOLDOWN_SECONDS=10
+
+✅ FILE STRUCTURE
+
+Generate project like:
+
+/gate-edge-device
+  main.py
+  anpr.py
+  gate_relay.py
+  cache.py
+  logger.py
+  requirements.txt
+  .env.example
+  README.md
+
+✅ REQUIREMENTS.TXT
+
+Include:
+
+opencv-python
+
+requests
+
+python-dotenv
+
+Optional:
+
+sqlite3 (builtin)
+
+numpy
+
+✅ README MUST INCLUDE
+
+How to run script
+
+How to set camera mode
+
+How to connect relay wiring diagram (basic text)
+
+How to test with dummy plate input
+
+✅ EXTRA (Highly Recommended)
+
+Add a test mode:
+
+python main.py --test-plate MP09AB1234
+
+It should call backend verify + open gate without camera.
+
+✅ Build clean, production-ready code with comments and good error handling.
